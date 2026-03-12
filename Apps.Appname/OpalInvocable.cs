@@ -1,17 +1,17 @@
-using Apps.Appname.Api;
+using Apps.Opal.Api;
 using Blackbird.Applications.Sdk.Common;
 using Blackbird.Applications.Sdk.Common.Authentication;
 using Blackbird.Applications.Sdk.Common.Invocation;
 
-namespace Apps.Appname;
+namespace Apps.Opal;
 
-public class Invocable : BaseInvocable
+public class OpalInvocable : BaseInvocable
 {
     protected AuthenticationCredentialsProvider[] Creds =>
         InvocationContext.AuthenticationCredentialsProviders.ToArray();
 
-    protected Client Client { get; }
-    public Invocable(InvocationContext invocationContext) : base(invocationContext)
+    protected OpalClient Client { get; }
+    public OpalInvocable(InvocationContext invocationContext) : base(invocationContext)
     {
         Client = new(Creds);
     }

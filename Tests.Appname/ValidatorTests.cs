@@ -1,8 +1,8 @@
-using Apps.Appname.Connections;
+using Tests.Opal.Base;
+using Apps.Opal.Connections;
 using Blackbird.Applications.Sdk.Common.Authentication;
-using Tests.Appname.Base;
 
-namespace Tests.Appname;
+namespace Tests.Opal;
 
 [TestClass]
 public class ConnectionValidatorTests : TestBase

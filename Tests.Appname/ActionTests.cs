@@ -1,7 +1,7 @@
-﻿using Apps.Appname.Actions;
-using Tests.Appname.Base;
+﻿using Apps.Opal.Actions;
+using Tests.Opal.Base;
 
-namespace Tests.Appname;
+namespace Tests.Opal;
 
 [TestClass]
 public class ActionTests : TestBase
