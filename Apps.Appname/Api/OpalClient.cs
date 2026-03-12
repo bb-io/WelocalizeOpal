@@ -12,10 +12,11 @@ public class OpalClient : BlackBirdRestClient
 {
     public OpalClient(IEnumerable<AuthenticationCredentialsProvider> creds) : base(new()
     {
-        BaseUrl = new Uri(""),
+        BaseUrl = new Uri("https://opal-api.welocalize.xyz/v1/"),
     })
     {
-        this.AddDefaultHeader("Authorization", creds.Get(CredsNames.Token).Value);
+        string token = creds.Get(CredsNames.Token).Value;
+        this.AddDefaultHeader("Authorization", $"Bearer {token}");
     }
 
     protected override Exception ConfigureErrorException(RestResponse response)

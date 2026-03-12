@@ -6,18 +6,18 @@ namespace Apps.Opal.Connections;
 
 public class ConnectionDefinition : IConnectionDefinition
 {
-    public IEnumerable<ConnectionPropertyGroup> ConnectionPropertyGroups => new List<ConnectionPropertyGroup>
-    {
+    public IEnumerable<ConnectionPropertyGroup> ConnectionPropertyGroups =>
+    [
         new()
         {
-            Name = "Developer API key",
+            Name = "Authentication token",
             AuthenticationType = ConnectionAuthenticationType.Undefined,
-            ConnectionProperties = new List<ConnectionProperty>
-            {
-                new(CredsNames.Token) { DisplayName = "API Token", Sensitive = true}
-            }
+            ConnectionProperties =
+            [
+                new(CredsNames.Token) { DisplayName = "Authentication token", Sensitive = true}
+            ]
         }
-    };
+    ];
 
     public IEnumerable<AuthenticationCredentialsProvider> CreateAuthorizationCredentialsProviders(
         Dictionary<string, string> values) => values.Select(x => new AuthenticationCredentialsProvider(x.Key, x.Value)

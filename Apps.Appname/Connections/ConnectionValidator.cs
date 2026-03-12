@@ -1,9 +1,12 @@
 ﻿using Apps.Opal.Api;
+using Apps.Opal.Models.Error;
 using Blackbird.Applications.Sdk.Common;
 using Blackbird.Applications.Sdk.Common.Authentication;
 using Blackbird.Applications.Sdk.Common.Connections;
 using Blackbird.Applications.Sdk.Common.Invocation;
+using Newtonsoft.Json;
 using RestSharp;
+using System.Net;
 
 namespace Apps.Opal.Connections;
 
@@ -16,17 +19,25 @@ public class ConnectionValidator(InvocationContext invocationContext) : BaseInvo
         try
         {
             var client = new OpalClient(authenticationCredentialsProviders);
-            var request = new RestRequest();
+            var request = new RestRequest("projects/1");
 
             var response = await client.ExecuteAsync(request, cancellationToken);
+            var isValid = response.StatusCode != HttpStatusCode.Unauthorized;
 
-            // Typically you'll want to use the least complex way to validate if a connection is valid.
-            var isValid = response.StatusCode != System.Net.HttpStatusCode.Unauthorized;
+            string message;
+            if (!isValid)
+            {
+                var error = JsonConvert.DeserializeObject<ErrorResponse>(response.Content ?? "");
+                message = error?.Detail ?? response.ErrorMessage ?? response.StatusCode.ToString();
+            }
+            else
+                message = "Success";
+                
 
             return new ConnectionValidationResponse
             {
                 IsValid = isValid,
-                Message = isValid ? "Success" : (response.Content ?? response.ErrorMessage ?? response.StatusCode.ToString()),
+                Message = message,
             };
 
         } 
