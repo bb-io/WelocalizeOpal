@@ -1,6 +1,6 @@
-﻿using Apps.Opal.Handlers;
-using Blackbird.Applications.Sdk.Common.Dynamic;
-using Tests.Opal.Base;
+﻿using Tests.Opal.Base;
+using Apps.Opal.Handlers;
+using Apps.Opal.Models.Identifier;
 
 namespace Tests.Opal;
 
@@ -8,18 +8,17 @@ namespace Tests.Opal;
 public class HandlerTests : TestBase
 {
     [TestMethod]
-    public async Task Dynamic_handler_works()
+    public async Task ProjectFileDataHandler_ReturnsProcessedProjectFiles()
     {
-        var handler = new DynamicHandler(InvocationContext);
+        // Arrange
+        var projectIdentifier = new ProjectIdentifier { ProjectId = "119" };
+        var handler = new ProjectFileDataHandler(InvocationContext, projectIdentifier);
 
-        var result = await handler.GetDataAsync(new DataSourceContext { }, CancellationToken.None);
+        // Act
+        var result = await handler.GetDataAsync(new(), default);
 
-        Console.WriteLine($"Total: {result.Count()}");
-        foreach (var item in result)
-        {
-            Console.WriteLine($"{item.Value}: {item.DisplayName}");
-        }
-
-        Assert.IsTrue(result.Count() > 0);
+        // Assert
+        PrintDataHandlerResult(result);
+        Assert.IsNotNull(result);
     }
 }

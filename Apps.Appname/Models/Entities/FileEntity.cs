@@ -24,4 +24,9 @@ public class FileEntity
 
     [JsonProperty("download_url")]
     public string DownloadUrl { get; set; } = string.Empty;
+
+    public override string ToString()
+    {
+        return $"{FileName} (ID: {FileId})";
+    }
 }

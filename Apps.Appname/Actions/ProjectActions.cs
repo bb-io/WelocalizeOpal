@@ -86,4 +86,28 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         var request = new RestRequest($"projects/{projectInput.ProjectId}/cancel", Method.Post);
         await Client.ExecuteWithErrorHandling(request);
     }
+
+    [Action("Complete project", Description = "Complete a project")]
+    public async Task CompleteProject([ActionParameter] ProjectIdentifier projectInput)
+    {
+        var request = new RestRequest($"projects/{projectInput.ProjectId}/complete", Method.Post);
+        await Client.ExecuteWithErrorHandling(request);
+    }
+
+    [Action("Download project file", Description = "Download a processed project file")]
+    public async Task<DownloadFileResponse> DownloadProjectFile(
+        [ActionParameter] ProjectIdentifier projectInput,
+        [ActionParameter] ProjectFileIdentifier fileInput)
+    {
+        var project = await GetProjectDetails(projectInput);
+        var completedFile = project.Files.First(x => x.FileId == fileInput.ProjectFileId);
+
+        var downloadS3Client = new RestClient();
+        var downloadS3Request = new RestRequest(completedFile.DownloadUrl);
+        var responseStream = await downloadS3Client.DownloadStreamAsync(downloadS3Request) ??
+            throw new PluginApplicationException("Failed to download file from S3. The download stream was null");
+
+        var file = await fileManagementClient.UploadAsync(responseStream, "application/octet-stream", completedFile.FileName);
+        return new(file);
+    }
 }

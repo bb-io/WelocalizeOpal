@@ -74,8 +74,7 @@ public class ProjectTests : TestBase
         await _actions.StartProject(projectId);
 
         // Assert
-        var startedProject = await _actions.GetProjectDetails(projectId);
-        Assert.AreEqual("started", startedProject.Status);
+        await AssertProjectStatus(projectId, "started");
     }
 
     [TestMethod]
@@ -88,7 +87,40 @@ public class ProjectTests : TestBase
         await _actions.CancelProject(projectId);
 
         // Assert
+        await AssertProjectStatus(projectId, "canceled");
+    }
+
+    [TestMethod]
+    public async Task CompleteProject_IsSuccess()
+    {
+        // Arrange
+        var projectId = new ProjectIdentifier { ProjectId = "119" };
+
+        // Act
+        await _actions.CompleteProject(projectId);
+
+        // Assert
+        await AssertProjectStatus(projectId, "completed");
+    }
+
+    [TestMethod]
+    public async Task DownloadProjectFile_IsSuccess()
+    {
+        // Arrange
+        var projectId = new ProjectIdentifier { ProjectId = "119" };
+        var fileId = new ProjectFileIdentifier { ProjectFileId = "676" };
+
+        // Act
+        var result = await _actions.DownloadProjectFile(projectId, fileId);
+
+        // Assert
+        Console.WriteLine(result.Content.Name);
+        Assert.IsNotNull(result.Content);
+    }
+
+    private async Task AssertProjectStatus(ProjectIdentifier projectId, string status)
+    {
         var startedProject = await _actions.GetProjectDetails(projectId);
-        Assert.AreEqual("canceled", startedProject.Status);
+        Assert.AreEqual(status, startedProject.Status);
     }
 }
