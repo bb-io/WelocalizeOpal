@@ -14,9 +14,6 @@ public class BaseProjectResponse(ProjectEntity entity)
     [Display("Customer ID")]
     public string CustomerId { get; set; } = entity.CustomerId;
 
-    [Display("Content group ID")]
-    public string ContentGroupId { get; set; } = entity.ContentGroupId;
-
     [Display("Orchestrator")]
     public string Orchestrator { get; set; } = entity.Orchestrator;
 

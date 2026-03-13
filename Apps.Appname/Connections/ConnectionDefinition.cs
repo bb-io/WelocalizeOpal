@@ -19,8 +19,8 @@ public class ConnectionDefinition : IConnectionDefinition
                 { 
                     DisplayName = "Environment", 
                     DataItems = [
-                        new("https://opalapi.welocalize.xyz/", "Testing"),
-                        new("https://opalapi.welocalize.tools/", "Production"),
+                        new("https://opal-api.welocalize.xyz", "Testing"),
+                        new("https://opal-api.welocalize.tools", "Production"),
                     ] 
                 }
             ]

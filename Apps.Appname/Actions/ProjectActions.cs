@@ -1,13 +1,14 @@
 using RestSharp;
 using Apps.Opal.Models.Entities;
-using Blackbird.Applications.Sdk.Common;
-using Blackbird.Applications.Sdk.Common.Actions;
-using Blackbird.Applications.Sdk.Common.Invocation;
-using Blackbird.Applications.Sdk.Utils.Extensions.Http;
-using Blackbird.Applications.SDK.Extensions.FileManagement.Interfaces;
 using Apps.Opal.Models.Identifier;
 using Apps.Opal.Models.Request.Project;
 using Apps.Opal.Models.Response.Project;
+using Blackbird.Applications.Sdk.Common;
+using Blackbird.Applications.Sdk.Common.Actions;
+using Blackbird.Applications.Sdk.Common.Invocation;
+using Blackbird.Applications.Sdk.Common.Exceptions;
+using Blackbird.Applications.Sdk.Utils.Extensions.Http;
+using Blackbird.Applications.SDK.Extensions.FileManagement.Interfaces;
 
 namespace Apps.Opal.Actions;
 
@@ -29,7 +30,6 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         var body = new
         {
             orchestrator_project_id = input.OrchestratorProjectId,
-            content_group_id = input.ContentGroupId,
             callback_url = "https://bridge.blackbird.io/api/AuthorizationCode",
         };
         var request = new RestRequest("projects", Method.Post).WithJsonBody(body);
@@ -56,13 +56,21 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
             type = "input",
             source_locale = uploadRequest.SourceLocale,
             target_locale = uploadRequest.TargetLocale,
+            content = Convert.ToBase64String(fileBytes)
         };
 
-        var request = new RestRequest($"projects/{projectInput.ProjectId}/files", Method.Post)
-            .WithJsonBody(body)
-            .AddFile(fileName, fileBytes, fileName);
+        var request = new RestRequest($"projects/{projectInput.ProjectId}/files", Method.Post).AddJsonBody(body);
+        var response = await Client.ExecuteWithErrorHandling<UploadProjectFileResponse>(request);
 
-        return await Client.ExecuteWithErrorHandling<UploadProjectFileResponse>(request);
+        var uploadToS3Client = new RestClient();
+        var uploadToS3Request = new RestRequest(response.UploadUrl, Method.Put)
+            .AddParameter("application/octet-stream", fileBytes, ParameterType.RequestBody);
+
+        var uploadToS3Response = await uploadToS3Client.ExecuteAsync(uploadToS3Request);
+        if (!uploadToS3Response.IsSuccessStatusCode)
+            throw new PluginApplicationException($"S3 Upload error. {uploadToS3Response.ErrorMessage}");
+
+        return response;
     }
 
     [Action("Start project", Description = "Start a project after all of the files have been uploaded")]
@@ -75,7 +83,7 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
     [Action("Cancel project", Description = "Cancel a project")]
     public async Task CancelProject([ActionParameter] ProjectIdentifier projectInput)
     {
-        var request = new RestRequest($"projects/{projectInput.ProjectId}/cancel", Method.Put);
+        var request = new RestRequest($"projects/{projectInput.ProjectId}/cancel", Method.Post);
         await Client.ExecuteWithErrorHandling(request);
     }
 }

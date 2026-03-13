@@ -13,7 +13,7 @@ public class OpalClient : BlackBirdRestClient
 {
     public OpalClient(IEnumerable<AuthenticationCredentialsProvider> creds) : base(new()
     {
-        BaseUrl = new Uri(creds.Get(CredsNames.Url).Value),
+        BaseUrl = new Uri($"{creds.Get(CredsNames.Url).Value}/v1"),
     })
     {
         string token = creds.Get(CredsNames.Token).Value;
@@ -22,21 +22,25 @@ public class OpalClient : BlackBirdRestClient
 
     protected override Exception ConfigureErrorException(RestResponse response)
     {
-        string statusCodePart = $"Status code {(int)response.StatusCode}.";
-        if (string.IsNullOrWhiteSpace(response.Content))
-            return new PluginApplicationException($"{statusCodePart} No content received from the server");
+        string statusCodePart = string.Empty;
+        if (response.StatusCode != 0)
+            statusCodePart = $"Status code {(int)response.StatusCode}. ";
 
-        if (response.ContentType == "application/json")
+        if (string.IsNullOrWhiteSpace(response.Content) && string.IsNullOrWhiteSpace(response.ErrorMessage))
+            return new PluginApplicationException($"{statusCodePart}No content received from the server");
+
+        if (response.ContentType == "application/json" && !string.IsNullOrWhiteSpace(response.Content))
         {
             var error = JsonConvert.DeserializeObject<ErrorResponse>(response.Content);
             if (error == null || string.IsNullOrEmpty(error.Detail))
-                return new PluginApplicationException($"{statusCodePart} Couldn't parse the error. Raw: {response.Content}");
+                return new PluginApplicationException($"{statusCodePart}Couldn't parse the error. Raw: {response.Content}");
 
             return new PluginApplicationException(error.Detail);
         }
-        else if (response.ContentType == "text/plain")
+        else if (response.ContentType == "text/plain" && !string.IsNullOrWhiteSpace(response.Content))
             return new PluginApplicationException(response.Content);
 
-        return new PluginApplicationException($"{statusCodePart} Unknown error");
+        string fallbackError = string.IsNullOrWhiteSpace(response.ErrorMessage) ? "Unknown error" : response.ErrorMessage;
+        return new PluginApplicationException($"{statusCodePart}{fallbackError}");
     }
 }
