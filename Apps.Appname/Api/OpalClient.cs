@@ -13,7 +13,7 @@ public class OpalClient : BlackBirdRestClient
 {
     public OpalClient(IEnumerable<AuthenticationCredentialsProvider> creds) : base(new()
     {
-        BaseUrl = new Uri("https://opal-api.welocalize.xyz/v1/"),
+        BaseUrl = new Uri(creds.Get(CredsNames.Url).Value),
     })
     {
         string token = creds.Get(CredsNames.Token).Value;

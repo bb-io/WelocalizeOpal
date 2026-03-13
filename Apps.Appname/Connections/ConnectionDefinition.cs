@@ -14,7 +14,15 @@ public class ConnectionDefinition : IConnectionDefinition
             AuthenticationType = ConnectionAuthenticationType.Undefined,
             ConnectionProperties =
             [
-                new(CredsNames.Token) { DisplayName = "Authentication token", Sensitive = true}
+                new(CredsNames.Token) { DisplayName = "Authentication token", Sensitive = true },
+                new(CredsNames.Url) 
+                { 
+                    DisplayName = "Environment", 
+                    DataItems = [
+                        new("https://opalapi.welocalize.xyz/", "Testing"),
+                        new("https://opalapi.welocalize.tools/", "Production"),
+                    ] 
+                }
             ]
         }
     ];
