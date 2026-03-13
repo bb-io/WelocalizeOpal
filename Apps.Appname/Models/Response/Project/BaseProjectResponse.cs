@@ -1,9 +1,9 @@
 ﻿using Apps.Opal.Models.Entities;
 using Blackbird.Applications.Sdk.Common;
 
-namespace Apps.Opal.Models.Response;
+namespace Apps.Opal.Models.Response.Project;
 
-public class CreateProjectResponse(ProjectEntity entity)
+public class BaseProjectResponse(ProjectEntity entity)
 {
     [Display("Project ID")]
     public string ProjectId { get; set; } = entity.ProjectId;

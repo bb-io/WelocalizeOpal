@@ -30,4 +30,7 @@ public class ProjectEntity
 
     [JsonProperty("expires_at")]
     public DateTime ExpiresAt { get; set; }
+
+    [JsonProperty("files")]
+    public IEnumerable<FileEntity> Files { get; set; } = [];
 }

@@ -1,6 +1,6 @@
 ﻿using Blackbird.Applications.Sdk.Common;
 
-namespace Apps.Opal.Models.Request;
+namespace Apps.Opal.Models.Request.Project;
 
 public class CreateProjectRequest
 {
