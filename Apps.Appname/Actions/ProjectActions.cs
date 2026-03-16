@@ -73,7 +73,7 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         return response;
     }
 
-    [Action("Start project", Description = "Start a project after all of the files have been uploaded")]
+    [Action("Start project", Description = "Start a project")]
     public async Task StartProject([ActionParameter] ProjectIdentifier projectInput)
     {
         var request = new RestRequest($"projects/{projectInput.ProjectId}/start", Method.Post);
