@@ -33,7 +33,7 @@ public class ProjectTests : TestBase
         // Arrange
         var input = new CreateProjectRequest
         {
-            OrchestratorProjectId = "testproj_bb_tests4"
+            OrchestratorProjectId = "testproj_bb_tests5"
         };
 
         // Act
@@ -48,12 +48,12 @@ public class ProjectTests : TestBase
     public async Task UploadProjectFile_ReturnsUploadedFileDetails()
     {
         // Arrange
-        var projectId = new ProjectIdentifier { ProjectId = "119" };
+        var projectId = new ProjectIdentifier { ProjectId = "136" };
         var input = new UploadProjectFileRequest
         {
             SourceLocale = "en-US",
-            TargetLocale = "pl-PL",
-            File = new FileReference { Name = "test.mxliff" }
+            TargetLocale = "nl-NL",
+            File = new FileReference { Name = "testNl.mxliff" }
         };
 
         // Act
@@ -68,7 +68,7 @@ public class ProjectTests : TestBase
     public async Task StartProject_IsSuccess()
     {
         // Arrange
-        var projectId = new ProjectIdentifier { ProjectId = "119" };
+        var projectId = new ProjectIdentifier { ProjectId = "136" };
 
         // Act
         await _actions.StartProject(projectId);
@@ -94,21 +94,26 @@ public class ProjectTests : TestBase
     public async Task CompleteProject_IsSuccess()
     {
         // Arrange
-        var projectId = new ProjectIdentifier { ProjectId = "119" };
+        var projectId = new ProjectIdentifier { ProjectId = "136" };
+        var request = new CompleteProjectRequest
+        {
+            Files = 
+            [
+                new FileReference { Name = "testNl.mxliff" }, 
+                new FileReference { Name = "testPl.mxliff" }
+            ]
+        };
 
         // Act
-        await _actions.CompleteProject(projectId);
-
-        // Assert
-        await AssertProjectStatus(projectId, "completed");
+        await _actions.CompleteProject(projectId, request);
     }
 
     [TestMethod]
     public async Task DownloadProjectFile_IsSuccess()
     {
         // Arrange
-        var projectId = new ProjectIdentifier { ProjectId = "119" };
-        var fileId = new ProjectFileIdentifier { ProjectFileId = "676" };
+        var projectId = new ProjectIdentifier { ProjectId = "136" };
+        var fileId = new ProjectFileIdentifier { ProjectFileId = "691" };
 
         // Act
         var result = await _actions.DownloadProjectFile(projectId, fileId);

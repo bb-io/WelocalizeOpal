@@ -23,7 +23,10 @@ public class FileEntity
     public string TargetLocale { get; set; } = string.Empty;
 
     [JsonProperty("download_url")]
-    public string DownloadUrl { get; set; } = string.Empty;
+    public string? DownloadUrl { get; set; } = string.Empty;
+
+    [JsonProperty("upload_url")]
+    public string UploadUrl { get; set; } = string.Empty;
 
     public override string ToString()
     {

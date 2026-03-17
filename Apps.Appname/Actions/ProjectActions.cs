@@ -25,7 +25,7 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
     }
 
     [Action("Create project", Description = "Create a new project")]
-    public async Task<CreateProjectResponse> CreateProject([ActionParameter] CreateProjectRequest input)
+    public async Task<BaseProjectResponse> CreateProject([ActionParameter] CreateProjectRequest input)
     {
         var body = new
         {
@@ -88,10 +88,38 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
     }
 
     [Action("Complete project", Description = "Complete a project")]
-    public async Task CompleteProject([ActionParameter] ProjectIdentifier projectInput)
+    public async Task CompleteProject(
+        [ActionParameter] ProjectIdentifier projectInput,
+        [ActionParameter] CompleteProjectRequest completeInput)
     {
-        var request = new RestRequest($"projects/{projectInput.ProjectId}/complete", Method.Post);
-        await Client.ExecuteWithErrorHandling(request);
+        var completeRequest = new RestRequest($"projects/{projectInput.ProjectId}/complete", Method.Post);
+        var completeResponse = await Client.ExecuteWithErrorHandling<List<FileEntity>>(completeRequest);
+
+        var s3Client = new RestClient();
+
+        var uploadTasks = completeInput.Files.Select(async userFile =>
+        {
+            var finalizedFile = completeResponse.FirstOrDefault(f => f.FileName == userFile.Name && f.FileType == "final") ??
+                throw new PluginApplicationException($"File with the name of '{userFile.Name}' was not finalized");
+
+            using var fileStream = await fileManagementClient.DownloadAsync(userFile);
+            using var memoryStream = new MemoryStream();
+            await fileStream.CopyToAsync(memoryStream);
+            var fileBytes = memoryStream.ToArray();
+
+            var uploadToS3Request = new RestRequest(finalizedFile.UploadUrl, Method.Put)
+                .AddParameter("application/octet-stream", fileBytes, ParameterType.RequestBody);
+
+            var uploadToS3Response = await s3Client.ExecuteAsync(uploadToS3Request);
+
+            if (!uploadToS3Response.IsSuccessStatusCode)
+            {
+                throw new PluginApplicationException(
+                    $"Failed to upload {userFile.Name} to S3. Error: {uploadToS3Response.ErrorMessage}");
+            }
+        });
+
+        await Task.WhenAll(uploadTasks);
     }
 
     [Action("Download project file", Description = "Download a processed project file")]

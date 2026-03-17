@@ -15,5 +15,5 @@ public class OnProjectCompletedResponse
     public string CustomerId { get; set; } = string.Empty;
 
     [Display("Completed at"), JsonProperty("completed_at")]
-    public DateTime CompletedAt { get; set; }
+    public DateTime? CompletedAt { get; set; }
 }

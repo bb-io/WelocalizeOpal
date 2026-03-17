@@ -11,7 +11,7 @@ public class HandlerTests : TestBase
     public async Task ProjectFileDataHandler_ReturnsProcessedProjectFiles()
     {
         // Arrange
-        var projectIdentifier = new ProjectIdentifier { ProjectId = "119" };
+        var projectIdentifier = new ProjectIdentifier { ProjectId = "137" };
         var handler = new ProjectFileDataHandler(InvocationContext, projectIdentifier);
 
         // Act
