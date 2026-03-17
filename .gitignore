@@ -367,4 +367,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 */appsettings.json
-Tests.Appname/TestFiles/Output
+Tests.Opal/TestFiles/Output
