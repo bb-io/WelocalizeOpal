@@ -9,12 +9,12 @@ namespace Apps.Opal.Webhooks;
 [WebhookList("Projects")]
 public class ProjectWebhookList
 {
-    [Webhook("On project completed", Description = "Triggers when a project is completed")]
+    [Webhook("On project completed", typeof(OnProjectCompletedResponse), Description = "Triggers when a project is completed")]
     public static WebhookResponse<OnProjectCompletedResponse> OnProjectCompleted(
         WebhookRequest webhookRequest,
         [WebhookParameter] ProjectIdentifier projectIdentifier)
     {
-        var data = webhookRequest.GetPayload<OnProjectCompletedResponse>();
+        var data = webhookRequest.GetBridgePayload<OnProjectCompletedResponse>();
 
         if (data.ProjectId != projectIdentifier.ProjectId)
         {

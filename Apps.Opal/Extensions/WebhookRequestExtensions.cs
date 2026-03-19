@@ -6,10 +6,10 @@ namespace Apps.Opal.Extensions;
 
 public static class WebhookRequestExtensions
 {
-    public static T GetPayload<T>(this WebhookRequest request)
+    public static T GetBridgePayload<T>(this WebhookRequest request)
     {
         string body = request.Body?.ToString()!;
-        var response = JsonConvert.DeserializeObject<WebhookWrapper<T>>(body);
-        return response!.Data!;
+        var response = JsonConvert.DeserializeObject<BridgeWebhookPayload<WebhookWrapper<T>>>(body);
+        return response!.Payload!.Data!;
     }
 }

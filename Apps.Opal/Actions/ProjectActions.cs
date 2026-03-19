@@ -1,14 +1,15 @@
-using RestSharp;
+using Apps.Opal.Extensions;
 using Apps.Opal.Models.Entities;
 using Apps.Opal.Models.Identifier;
 using Apps.Opal.Models.Request.Project;
 using Apps.Opal.Models.Response.Project;
 using Blackbird.Applications.Sdk.Common;
 using Blackbird.Applications.Sdk.Common.Actions;
-using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.Sdk.Common.Exceptions;
+using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.Sdk.Utils.Extensions.Http;
 using Blackbird.Applications.SDK.Extensions.FileManagement.Interfaces;
+using RestSharp;
 
 namespace Apps.Opal.Actions;
 
@@ -30,7 +31,7 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         var body = new
         {
             orchestrator_project_id = input.OrchestratorProjectId,
-            callback_url = "https://bridge.blackbird.io/api/AuthorizationCode",
+            callback_url = InvocationContext.GetCustomBridgeUrl(),
         };
         var request = new RestRequest("projects", Method.Post).WithJsonBody(body);
 
