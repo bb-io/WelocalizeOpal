@@ -2,5 +2,5 @@
 
 public class ApplicationConstants
 {
-    public const string BlackbirdToken = "#{OPAL_BLACKBIRD_TOKEN}#";
+    public const string BlackbirdToken = "#{BLACKBIRD_OPAL_TOKEN}#";
 }
