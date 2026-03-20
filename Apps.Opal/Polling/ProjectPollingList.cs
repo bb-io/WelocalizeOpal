@@ -10,7 +10,7 @@ using RestSharp;
 namespace Apps.Opal.Polling;
 
 [PollingEventList("Projects")]
-public class PollingList(InvocationContext invocationContext) : OpalInvocable(invocationContext)
+public class ProjectPollingList(InvocationContext invocationContext) : OpalInvocable(invocationContext)
 {
     [PollingEvent("On project status changed", Description = "Triggers when the status of a specified project changes")]
     public async Task<PollingEventResponse<ProjectStatusMemory, GetProjectDetailsResponse>> OnProjectStatusChanged(
