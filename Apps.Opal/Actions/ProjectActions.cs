@@ -1,4 +1,3 @@
-using Apps.Opal.Extensions;
 using Apps.Opal.Models.Entities;
 using Apps.Opal.Models.Identifier;
 using Apps.Opal.Models.Request.Project;
@@ -31,7 +30,7 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         var body = new
         {
             orchestrator_project_id = input.OrchestratorProjectId,
-            callback_url = InvocationContext.GetCustomBridgeUrl(),
+            callback_url = "https://123.com/",
         };
         var request = new RestRequest("projects", Method.Post).WithJsonBody(body);
 

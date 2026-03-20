@@ -40,7 +40,7 @@ Before you can connect, make sure you have a welocalize OPAL authentication toke
 
 ### Project
 
-- **On project completed** Triggers when a project is completed.
+- **On project status changed** Triggers when the status of a specified project changes.
 
 ## Feedback
 
