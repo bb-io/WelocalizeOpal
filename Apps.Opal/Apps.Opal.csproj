@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Product>welocalize OPAL [Beta]</Product>
+        <Product>Welocalize OPAL [Beta]</Product>
         <Description>Welocalize OPAL is an AI-powered localization platform used to translate and manage multilingual content at scale</Description>
         <Version>1.0.0</Version>
         <AssemblyName>Apps.Opal</AssemblyName>
