@@ -98,9 +98,11 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         var uploadTasks = completeInput.Files.Zip(completeInput.JobIds, async (file, jobId) =>
         {
             var finalizedFile = completeResponse
-                .Where(x => x.FileType == "output")
+                .Where(x => x.FileType == "final")
+                .Where(x => string.IsNullOrEmpty(x.DownloadUrl))
                 .FirstOrDefault(f => f.JobId == jobId) ??
-                throw new PluginMisconfigurationException($"Job ID {jobId} is not completed - no output files detected");
+                throw new PluginMisconfigurationException(
+                    $"Job ID {jobId} is not completed - no pending final file slot detected");
 
             var fileBytes = await FileManagementHelper.DownloadFile(file, fileManagementClient);
 

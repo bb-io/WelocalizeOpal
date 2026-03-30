@@ -94,14 +94,11 @@ public class ProjectTests : TestBase
     public async Task CompleteProject_IsSuccess()
     {
         // Arrange
-        var projectId = new ProjectIdentifier { ProjectId = "136" };
+        var projectId = new ProjectIdentifier { ProjectId = "139" };
         var request = new CompleteProjectRequest
         {
-            Files = 
-            [
-                new FileReference { Name = "testNl.mxliff" }, 
-                new FileReference { Name = "testPl.mxliff" }
-            ]
+            Files = [new FileReference { Name = "testNl.mxliff" }],
+            JobIds = ["415"]
         };
 
         // Act
