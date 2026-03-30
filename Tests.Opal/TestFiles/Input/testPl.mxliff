@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:m="http://www.memsource.com/mxlf/2.0">
+	<file original="3 random sentences.txt" source-language="en-US" target-language="pl-PL" datatype="x-undefined">
+		<body>
+			<group id="1">
+				<trans-unit id="3490d884-0075-4adb-8618-887954f16094-0-1" xml:space="preserve">
+                    <source>They ran around the corner to find that they had traveled back in time.</source>
+                    <target>They ran around the corner to find that they had traveled back in time.</target>
+                </trans-unit>
+				<trans-unit id="3b1afe30-9fd2-40da-99e8-b874f22d22f8-1-2" xml:space="preserve">
+                    <source>Seek success, but always be prepared for random cats.</source>
+                    <target>Seek success, but always be prepared for random cats.</target>
+                </trans-unit>
+				<trans-unit id="61c046a3-fb39-41bb-b2a9-aae755bea184-2-3" xml:space="preserve">
+                    <source>It isn't true that my mattress is made of cotton candy.</source>
+                    <target>It isn't true that my mattress is made of cotton candy.</target>
+                </trans-unit>
+				<trans-unit id="7bf592f7-d14c-426a-90f2-ddcaf1e2cc7c-3-4" xml:space="preserve">
+                    <source>Tomatoes make great weapons when water balloons aren’t available.</source>
+                    <target>Tomatoes make great weapons when water balloons aren’t available.</target>
+                </trans-unit>
+				<trans-unit id="b8258751-1eb1-43cd-99e3-6b9ae252e82e-4-5" xml:space="preserve">
+                    <source>It caught him off guard that space smelled of seared steak.</source>
+                    <target>It caught him off guard that space smelled of seared steak.</target>
+                </trans-unit>
+			</group>
+		</body>
+	</file>
+</xliff>
