@@ -1,3 +1,4 @@
+using Apps.Opal.Helper;
 using Apps.Opal.Models.Entities;
 using Apps.Opal.Models.Identifier;
 using Apps.Opal.Models.Request.Project;
@@ -43,16 +44,11 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         [ActionParameter] ProjectIdentifier projectInput,
         [ActionParameter] UploadProjectFileRequest uploadRequest)
     {
-        var fileStream = await fileManagementClient.DownloadAsync(uploadRequest.File);
-        using var ms = new MemoryStream();
-        await fileStream.CopyToAsync(ms);
-        var fileBytes = ms.ToArray();
-
-        string fileName = uploadRequest.File.Name;
+        var fileBytes = await FileManagementHelper.DownloadFile(uploadRequest.File, fileManagementClient);
 
         var body = new
         {
-            name = fileName,
+            name = uploadRequest.File.Name,
             type = "input",
             source_locale = uploadRequest.SourceLocale,
             target_locale = uploadRequest.TargetLocale,
@@ -92,20 +88,21 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         [ActionParameter] ProjectIdentifier projectInput,
         [ActionParameter] CompleteProjectRequest completeInput)
     {
+        completeInput.Validate();
+
         var completeRequest = new RestRequest($"projects/{projectInput.ProjectId}/complete", Method.Post);
         var completeResponse = await Client.ExecuteWithErrorHandling<List<FileEntity>>(completeRequest);
 
         var s3Client = new RestClient();
 
-        var uploadTasks = completeInput.Files.Select(async userFile =>
+        var uploadTasks = completeInput.Files.Zip(completeInput.JobIds, async (file, jobId) =>
         {
-            var finalizedFile = completeResponse.FirstOrDefault(f => f.FileName == userFile.Name && f.FileType == "final") ??
-                throw new PluginApplicationException($"File with the name of '{userFile.Name}' was not finalized");
+            var finalizedFile = completeResponse
+                .Where(x => x.FileType == "output")
+                .FirstOrDefault(f => f.JobId == jobId) ??
+                throw new PluginMisconfigurationException($"Job ID {jobId} is not completed - no output files detected");
 
-            using var fileStream = await fileManagementClient.DownloadAsync(userFile);
-            using var memoryStream = new MemoryStream();
-            await fileStream.CopyToAsync(memoryStream);
-            var fileBytes = memoryStream.ToArray();
+            var fileBytes = await FileManagementHelper.DownloadFile(file, fileManagementClient);
 
             var uploadToS3Request = new RestRequest(finalizedFile.UploadUrl, Method.Put)
                 .AddParameter("application/octet-stream", fileBytes, ParameterType.RequestBody);
@@ -113,10 +110,7 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
             var uploadToS3Response = await s3Client.ExecuteAsync(uploadToS3Request);
 
             if (!uploadToS3Response.IsSuccessStatusCode)
-            {
-                throw new PluginApplicationException(
-                    $"Failed to upload {userFile.Name} to S3. Error: {uploadToS3Response.ErrorMessage}");
-            }
+                throw new PluginApplicationException($"Failed to upload {file.Name} to S3. {uploadToS3Response.ErrorMessage}");
         });
 
         await Task.WhenAll(uploadTasks);
