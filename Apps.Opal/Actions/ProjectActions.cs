@@ -30,7 +30,7 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         var body = new
         {
             orchestrator_project_id = input.OrchestratorProjectId,
-            callback_url = "https://123.com/",
+            callback_url = "https://123.com/",  // It's required by the API although we don't use callbacks
         };
         var request = new RestRequest("projects", Method.Post).WithJsonBody(body);
 
