@@ -31,11 +31,12 @@ public class OpalClient : BlackBirdRestClient
 
         if (response.ContentType == "application/json" && !string.IsNullOrWhiteSpace(response.Content))
         {
-            var error = JsonConvert.DeserializeObject<ErrorResponse>(response.Content);
-            if (error == null || string.IsNullOrEmpty(error.Detail))
-                return new PluginApplicationException($"{statusCodePart}Couldn't parse the error. Raw: {response.Content}");
+            //var error = JsonConvert.DeserializeObject<ErrorResponse>(response.Content);
+            //if (error == null || string.IsNullOrEmpty(error.Detail))
+            //    return new PluginApplicationException($"{statusCodePart}Couldn't parse the error. Raw: {response.Content}");
 
-            return new PluginApplicationException(error.Detail);
+            //return new PluginApplicationException(error.Detail);
+            return new PluginApplicationException(response.Content);
         }
         else if (response.ContentType == "text/plain" && !string.IsNullOrWhiteSpace(response.Content))
             return new PluginApplicationException(response.Content);
