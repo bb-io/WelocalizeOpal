@@ -5,5 +5,5 @@ namespace Apps.Opal.Models.Identifier;
 public class ProjectIdentifier
 {
     [Display("Project ID")]
-    public string ProjectId { get; set; } = string.Empty;
+    public string ProjectId { get; set; }
 }

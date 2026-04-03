@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <Product>welocalize OPAL [Beta]</Product>
         <Description>welocalize OPAL is an AI-powered localization platform used to translate and manage multilingual content at scale</Description>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
         <AssemblyName>Apps.Opal</AssemblyName>
     </PropertyGroup>
 
