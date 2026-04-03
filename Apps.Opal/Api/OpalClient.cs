@@ -6,7 +6,6 @@ using Blackbird.Applications.Sdk.Utils.Extensions.Sdk;
 using Blackbird.Applications.Sdk.Utils.RestSharp;
 using Newtonsoft.Json;
 using RestSharp;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Apps.Opal.Api;
 
@@ -32,12 +31,11 @@ public class OpalClient : BlackBirdRestClient
 
         if (response.ContentType == "application/json" && !string.IsNullOrWhiteSpace(response.Content))
         {
-            //var error = JsonConvert.DeserializeObject<ErrorResponse>(response.Content);
-            //if (error == null || string.IsNullOrEmpty(error.Detail))
-                //return new PluginApplicationException($"{statusCodePart}Couldn't parse the error. Raw: {response.Content}");
+            var error = JsonConvert.DeserializeObject<ErrorResponse>(response.Content);
+            if (error == null || string.IsNullOrEmpty(error.Detail))
+                return new PluginApplicationException($"{statusCodePart}Couldn't parse the error. Raw: {response.Content}");
 
-            //return new PluginApplicationException(error.Detail);
-            return new PluginApplicationException(response.Content);
+            return new PluginApplicationException(error.Detail);
         }
         else if (response.ContentType == "text/plain" && !string.IsNullOrWhiteSpace(response.Content))
             return new PluginApplicationException(response.Content);
