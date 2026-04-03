@@ -124,7 +124,9 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         [ActionParameter] ProjectFileIdentifier fileInput)
     {
         var project = await GetProjectDetails(projectInput);
-        var completedFile = project.Files.First(x => x.FileId == fileInput.ProjectFileId);
+        var completedFile = project.Files.FirstOrDefault(x => x.FileId == fileInput.ProjectFileId)
+            ?? throw new PluginMisconfigurationException(
+                $"File ID {fileInput.ProjectFileId} was not found for project ID {projectInput.ProjectId}");
 
         var downloadS3Client = new RestClient();
         var downloadS3Request = new RestRequest(completedFile.DownloadUrl);
