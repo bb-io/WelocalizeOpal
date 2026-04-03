@@ -128,10 +128,14 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
 
         var downloadS3Client = new RestClient();
         var downloadS3Request = new RestRequest(completedFile.DownloadUrl);
-        var responseStream = await downloadS3Client.DownloadStreamAsync(downloadS3Request) ??
-            throw new PluginApplicationException("Failed to download file from S3. The download stream was null");
+        var networkStream = await downloadS3Client.DownloadStreamAsync(downloadS3Request) ??
+            throw new PluginApplicationException("Failed to download file from S3.");
 
-        var file = await fileManagementClient.UploadAsync(responseStream, "application/octet-stream", completedFile.FileName);
+        var seekableStream = new MemoryStream();
+        await networkStream.CopyToAsync(seekableStream);
+        seekableStream.Position = 0;
+
+        var file = await fileManagementClient.UploadAsync(seekableStream, "application/octet-stream", completedFile.FileName);
         return new(file);
     }
 }
