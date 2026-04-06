@@ -2,7 +2,6 @@
 using Apps.Opal.Models.Identifier;
 using Blackbird.Applications.Sdk.Common;
 using Blackbird.Applications.Sdk.Common.Dynamic;
-using Blackbird.Applications.Sdk.Common.Exceptions;
 using Blackbird.Applications.Sdk.Common.Invocation;
 using RestSharp;
 
@@ -15,8 +14,7 @@ public class CompletedJobDataHandler(
 {
     public async Task<IEnumerable<DataSourceItem>> GetDataAsync(DataSourceContext context, CancellationToken ct)
     {
-        if (string.IsNullOrEmpty(projectIdentifier.ProjectId))
-            throw new PluginMisconfigurationException("Please specify the project ID first");
+        projectIdentifier.Validate();
 
         var request = new RestRequest($"projects/{projectIdentifier.ProjectId}");
         var response = await Client.ExecuteWithErrorHandling<ProjectEntity>(request);

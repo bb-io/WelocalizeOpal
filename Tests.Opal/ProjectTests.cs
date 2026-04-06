@@ -109,8 +109,8 @@ public class ProjectTests : TestBase
     public async Task DownloadProjectFile_IsSuccess()
     {
         // Arrange
-        var projectId = new ProjectIdentifier { ProjectId = "136" };
-        var fileId = new ProjectFileIdentifier { ProjectFileId = "691" };
+        var projectId = new ProjectIdentifier { ProjectId = "248" };
+        var fileId = new ProjectFileIdentifier { ProjectFileId = "123" };
 
         // Act
         var result = await _actions.DownloadProjectFile(projectId, fileId);
