@@ -18,7 +18,15 @@ public class ProjectFileDataHandler(
         if (string.IsNullOrEmpty(projectIdentifier.ProjectId))
             throw new PluginMisconfigurationException("Please specify the project ID first");
 
-        var request = new RestRequest($"projects/{projectIdentifier.ProjectId}");
+        if (!int.TryParse(projectIdentifier.ProjectId, out var projectId))
+        {
+            throw new PluginMisconfigurationException(
+                @"Please specify a valid project ID integer.
+                The 'Project ID' value must not be passed from outputs of previous actions or events
+                to perform a search during the bird building");
+        }
+
+        var request = new RestRequest($"projects/{projectId}");
         var response = await Client.ExecuteWithErrorHandling<ProjectEntity>(request);
 
         var processedFiles = response.Files.Where(x => x.FileType is "output" or "final");

@@ -1,7 +1,7 @@
 ﻿using Apps.Opal.Models.Entities;
 using Blackbird.Applications.Sdk.Common;
 
-namespace Apps.Opal.Models.Response;
+namespace Apps.Opal.Models.Response.Project;
 
 public class FileResponse(FileEntity fileEntity)
 {
@@ -24,5 +24,5 @@ public class FileResponse(FileEntity fileEntity)
     public string TargetLocale { get; set; } = fileEntity.TargetLocale;
 
     [Display("Download URL")]
-    public string DownloadUrl { get; set; } = fileEntity.DownloadUrl;
+    public string? DownloadUrl { get; set; } = fileEntity.DownloadUrl;
 }
