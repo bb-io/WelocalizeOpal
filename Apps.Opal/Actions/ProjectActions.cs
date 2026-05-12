@@ -147,7 +147,7 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         
         if (string.IsNullOrWhiteSpace(completedFile.DownloadUrl))
             throw new PluginMisconfigurationException(
-                $"Unable to download file ID {fileInput.ProjectFileId} - no download URL found");
+                $"Unable to download file ID {fileInput.ProjectFileId} for project ID {projectInput.ProjectId} - no download URL found");
 
         var downloadS3Client = new RestClient();
         var downloadS3Request = new RestRequest(completedFile.DownloadUrl);
