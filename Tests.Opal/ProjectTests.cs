@@ -17,7 +17,7 @@ public class ProjectTests : TestBase
     public async Task GetProjectDetails_ReturnsProjectDetails()
     {
         // Arrange
-        var projectId = new ProjectIdentifier { ProjectId = "125" };
+        var projectId = new ProjectIdentifier { ProjectId = "826" };
 
         // Act
         var result = await _actions.GetProjectDetails(projectId);
@@ -33,7 +33,8 @@ public class ProjectTests : TestBase
         // Arrange
         var input = new CreateProjectRequest
         {
-            OrchestratorProjectId = "testproj_bb_tests5"
+            OrchestratorProjectId = "testproj_bb_tests7",
+            ContentGroupName = "blackbird-integration-testing"
         };
 
         // Act

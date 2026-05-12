@@ -28,11 +28,15 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
     [Action("Create project", Description = "Create a new project")]
     public async Task<BaseProjectResponse> CreateProject([ActionParameter] CreateProjectRequest input)
     {
-        var body = new
+        var body = new Dictionary<string, string?>
         {
-            orchestrator_project_id = input.OrchestratorProjectId,
-            callback_url = "https://123.com/",  // It's required by the API although we don't use callbacks
+            { "orchestrator_project_id", input.OrchestratorProjectId },
+            { "callback_url", "https://123.com/" }  // It's required by the API, although we don't use callbacks
         };
+        
+        if (!string.IsNullOrWhiteSpace(input.ContentGroupName))
+            body["content_group_name"] = input.ContentGroupName;
+        
         var request = new RestRequest("projects", Method.Post).WithJsonBody(body);
 
         var response = await Client.ExecuteWithErrorHandling<ProjectEntity>(request);
