@@ -17,7 +17,7 @@ public class ProjectTests : TestBase
     public async Task GetProjectDetails_ReturnsProjectDetails()
     {
         // Arrange
-        var projectId = new ProjectIdentifier { ProjectId = "826" };
+        var projectId = new ProjectIdentifier { ProjectId = "125" };
 
         // Act
         var result = await _actions.GetProjectDetails(projectId);
@@ -106,6 +106,21 @@ public class ProjectTests : TestBase
         await _actions.CompleteProject(projectId, request);
     }
 
+    [TestMethod]
+    public async Task SearchProjectFiles_ReturnsProjectFiles()
+    {
+        // Arrange
+        var projectIdentifier = new ProjectIdentifier { ProjectId = "125" };
+        var searchInput = new SearchProjectFilesRequest { FileTypes = [] };
+
+        // Act
+        var result = await _actions.SearchProjectFiles(projectIdentifier, searchInput);
+
+        // Assert
+        PrintJsonResult(result);
+        Assert.IsNotNull(result);
+    }
+    
     [TestMethod]
     public async Task DownloadProjectFile_IsSuccess()
     {
