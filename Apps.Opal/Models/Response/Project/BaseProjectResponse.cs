@@ -17,6 +17,12 @@ public class BaseProjectResponse(ProjectEntity entity)
     [Display("Orchestrator")]
     public string Orchestrator { get; set; } = entity.Orchestrator;
 
+    [Display("Content group ID")]
+    public string ContentGroupId { get; set; } = entity.ContentGroupId;
+
+    [Display("Content group name")]
+    public string ContentGroupName { get; set; } = entity.ContentGroupName;
+
     [Display("Status")]
     public string Status { get; set; } = entity.Status;
 

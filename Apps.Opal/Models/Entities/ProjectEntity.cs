@@ -16,6 +16,9 @@ public class ProjectEntity
     [JsonProperty("content_group_id")]
     public string ContentGroupId { get; set; } = string.Empty;
 
+    [JsonProperty("content_group_name")]
+    public string ContentGroupName { get; set; } = string.Empty;
+
     [JsonProperty("orchestrator")]
     public string Orchestrator { get; set; } = string.Empty;
 

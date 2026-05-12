@@ -20,19 +20,22 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
     [Action("Get project details", Description = "Get information about an existing project")]
     public async Task<GetProjectDetailsResponse> GetProjectDetails([ActionParameter] ProjectIdentifier projectInput)
     {
-        var request = new RestRequest($"projects/{projectInput.ProjectId}");
-        var response = await Client.ExecuteWithErrorHandling<ProjectEntity>(request);
+        ProjectEntity response = await FetchProjectDetails(projectInput.ProjectId);
         return new(response);
     }
 
     [Action("Create project", Description = "Create a new project")]
     public async Task<BaseProjectResponse> CreateProject([ActionParameter] CreateProjectRequest input)
     {
-        var body = new
+        var body = new Dictionary<string, string?>
         {
-            orchestrator_project_id = input.OrchestratorProjectId,
-            callback_url = "https://123.com/",  // It's required by the API although we don't use callbacks
+            { "orchestrator_project_id", input.OrchestratorProjectId },
+            { "callback_url", "https://123.com/" }  // It's required by the API, although we don't use callbacks
         };
+        
+        if (!string.IsNullOrWhiteSpace(input.ContentGroupName))
+            body["content_group_name"] = input.ContentGroupName;
+        
         var request = new RestRequest("projects", Method.Post).WithJsonBody(body);
 
         var response = await Client.ExecuteWithErrorHandling<ProjectEntity>(request);
@@ -118,15 +121,33 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         await Task.WhenAll(uploadTasks);
     }
 
+    [Action("Search project files", Description = "Search files for a specific project")]
+    public async Task<SearchProjectFilesResponse> SearchProjectFiles(
+        [ActionParameter] ProjectIdentifier projectInput,
+        [ActionParameter] SearchProjectFilesRequest searchInput)
+    {
+        ProjectEntity project = await FetchProjectDetails(projectInput.ProjectId);
+        var files = project.Files;
+            
+        if (searchInput.FileTypes != null && searchInput.FileTypes.Any())
+            files = files.Where(x => searchInput.FileTypes.Contains(x.FileType, StringComparer.OrdinalIgnoreCase));
+
+        return new(files.Select(x => new FileResponse(x)).ToList());
+    }
+    
     [Action("Download project file", Description = "Download a processed project file")]
     public async Task<DownloadFileResponse> DownloadProjectFile(
         [ActionParameter] ProjectIdentifier projectInput,
         [ActionParameter] ProjectFileIdentifier fileInput)
     {
-        var project = await GetProjectDetails(projectInput);
+        var project = await FetchProjectDetails(projectInput.ProjectId);
         var completedFile = project.Files.FirstOrDefault(x => x.FileId == fileInput.ProjectFileId) ?? 
             throw new PluginMisconfigurationException(
                 $"File ID {fileInput.ProjectFileId} was not found for project ID {projectInput.ProjectId}");
+        
+        if (string.IsNullOrWhiteSpace(completedFile.DownloadUrl))
+            throw new PluginMisconfigurationException(
+                $"Unable to download file ID {fileInput.ProjectFileId} for project ID {projectInput.ProjectId} - no download URL found");
 
         var downloadS3Client = new RestClient();
         var downloadS3Request = new RestRequest(completedFile.DownloadUrl);
@@ -139,5 +160,11 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
 
         var file = await fileManagementClient.UploadAsync(seekableStream, "application/octet-stream", completedFile.FileName);
         return new(file);
+    }
+
+    private async Task<ProjectEntity> FetchProjectDetails(string projectId)
+    {
+        var request = new RestRequest($"projects/{projectId}");
+        return await Client.ExecuteWithErrorHandling<ProjectEntity>(request);
     }
 }

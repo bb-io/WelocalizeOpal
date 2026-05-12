@@ -15,7 +15,7 @@ public class HandlerTests : TestBase
         var handler = new ProjectFileDataHandler(InvocationContext, projectIdentifier);
 
         // Act
-        var result = await handler.GetDataAsync(new(), default);
+        var result = await handler.GetDataAsync(new(), CancellationToken.None);
 
         // Assert
         PrintDataHandlerResult(result);
@@ -30,7 +30,21 @@ public class HandlerTests : TestBase
         var handler = new CompletedJobDataHandler(InvocationContext, projectIdentifier);
 
         // Act
-        var result = await handler.GetDataAsync(new(), default);
+        var result = await handler.GetDataAsync(new(), CancellationToken.None);
+
+        // Assert
+        PrintDataHandlerResult(result);
+        Assert.IsNotNull(result);
+    }
+
+    [TestMethod]
+    public async Task ContentGroupNameDataHandler_ReturnsContentGroupNames()
+    {
+        // Arrange
+        var handler = new ContentGroupNameDataHandler(InvocationContext);
+
+        // Act
+        var result = await handler.GetDataAsync(new(), CancellationToken.None);
 
         // Assert
         PrintDataHandlerResult(result);

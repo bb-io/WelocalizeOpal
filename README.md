@@ -34,6 +34,7 @@ Before you can connect, make sure you have a welocalize OPAL authentication toke
 - **Start project** Start a project.
 - **Cancel project** Cancel a project.
 - **Complete project** Complete a project.
+- **Search project files** Search files for a specific project.
 - **Download project file** Download a processed project file.
 
 ## Events

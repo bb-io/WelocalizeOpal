@@ -33,7 +33,8 @@ public class ProjectTests : TestBase
         // Arrange
         var input = new CreateProjectRequest
         {
-            OrchestratorProjectId = "testproj_bb_tests5"
+            OrchestratorProjectId = "testproj_bb_tests7",
+            ContentGroupName = "blackbird-integration-testing"
         };
 
         // Act
@@ -105,6 +106,21 @@ public class ProjectTests : TestBase
         await _actions.CompleteProject(projectId, request);
     }
 
+    [TestMethod]
+    public async Task SearchProjectFiles_ReturnsProjectFiles()
+    {
+        // Arrange
+        var projectIdentifier = new ProjectIdentifier { ProjectId = "125" };
+        var searchInput = new SearchProjectFilesRequest { FileTypes = [] };
+
+        // Act
+        var result = await _actions.SearchProjectFiles(projectIdentifier, searchInput);
+
+        // Assert
+        PrintJsonResult(result);
+        Assert.IsNotNull(result);
+    }
+    
     [TestMethod]
     public async Task DownloadProjectFile_IsSuccess()
     {
