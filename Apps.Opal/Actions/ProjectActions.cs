@@ -140,10 +140,14 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         [ActionParameter] ProjectIdentifier projectInput,
         [ActionParameter] ProjectFileIdentifier fileInput)
     {
-        var project = await GetProjectDetails(projectInput);
+        var project = await FetchProjectDetails(projectInput.ProjectId);
         var completedFile = project.Files.FirstOrDefault(x => x.FileId == fileInput.ProjectFileId) ?? 
             throw new PluginMisconfigurationException(
                 $"File ID {fileInput.ProjectFileId} was not found for project ID {projectInput.ProjectId}");
+        
+        if (string.IsNullOrWhiteSpace(completedFile.DownloadUrl))
+            throw new PluginMisconfigurationException(
+                $"Unable to download file ID {fileInput.ProjectFileId} - no download URL found");
 
         var downloadS3Client = new RestClient();
         var downloadS3Request = new RestRequest(completedFile.DownloadUrl);
