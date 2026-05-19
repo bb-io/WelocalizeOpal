@@ -30,11 +30,9 @@ public class ProjectActions(InvocationContext invocationContext, IFileManagement
         var body = new Dictionary<string, string?>
         {
             { "orchestrator_project_id", input.OrchestratorProjectId },
-            { "callback_url", "https://123.com/" }  // It's required by the API, although we don't use callbacks
+            { "callback_url", "https://123.com/" },  // It's required by the API, although we don't use callbacks
+            { "content_group_name", input.ContentGroupName }
         };
-        
-        if (!string.IsNullOrWhiteSpace(input.ContentGroupName))
-            body["content_group_name"] = input.ContentGroupName;
         
         var request = new RestRequest("projects", Method.Post).WithJsonBody(body);
 
