@@ -10,5 +10,5 @@ public class CreateProjectRequest
     public string OrchestratorProjectId { get; set; } = string.Empty;
 
     [Display("Content group name"), DataSource(typeof(ContentGroupNameDataHandler))]
-    public string? ContentGroupName { get; set; }
+    public string ContentGroupName { get; set; } = string.Empty;
 }

@@ -33,7 +33,7 @@ public class ProjectTests : TestBase
         // Arrange
         var input = new CreateProjectRequest
         {
-            OrchestratorProjectId = "testproj_bb_tests7",
+            OrchestratorProjectId = "testproj_bb_tests8",
             ContentGroupName = "blackbird-integration-testing"
         };
 
