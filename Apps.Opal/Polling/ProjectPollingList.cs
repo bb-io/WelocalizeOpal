@@ -27,7 +27,7 @@ public class ProjectPollingList(InvocationContext invocationContext) : OpalInvoc
             return new PollingEventResponse<ProjectStatusMemory, GetProjectDetailsResponse>
             {
                 FlyBird = false,
-                Memory = new(currentStatus),
+                Memory = new ProjectStatusMemory { LastStatus = currentStatus },
                 Result = null
             };
         }
@@ -39,14 +39,14 @@ public class ProjectPollingList(InvocationContext invocationContext) : OpalInvoc
                 return new PollingEventResponse<ProjectStatusMemory, GetProjectDetailsResponse>
                 {
                     FlyBird = true,
-                    Memory = new(currentStatus),
+                    Memory = new ProjectStatusMemory { LastStatus = currentStatus },
                     Result = new(response)
                 };
             }
-            else return new PollingEventResponse<ProjectStatusMemory, GetProjectDetailsResponse>
+            return new PollingEventResponse<ProjectStatusMemory, GetProjectDetailsResponse>
             {
                 FlyBird = false,
-                Memory = new(currentStatus),
+                Memory = new ProjectStatusMemory { LastStatus = currentStatus },
                 Result = null
             };
         }
@@ -56,7 +56,7 @@ public class ProjectPollingList(InvocationContext invocationContext) : OpalInvoc
             return new PollingEventResponse<ProjectStatusMemory, GetProjectDetailsResponse>
             {
                 FlyBird = true,
-                Memory = new(currentStatus),
+                Memory = new ProjectStatusMemory { LastStatus = currentStatus },
                 Result = new(response)
             };
         }
@@ -64,7 +64,7 @@ public class ProjectPollingList(InvocationContext invocationContext) : OpalInvoc
         return new PollingEventResponse<ProjectStatusMemory, GetProjectDetailsResponse>
         {
             FlyBird = false,
-            Memory = new(currentStatus),
+            Memory = new ProjectStatusMemory { LastStatus = currentStatus },
             Result = null
         };
     }

@@ -49,7 +49,7 @@ public class ProjectTests : TestBase
     public async Task UploadProjectFile_ReturnsUploadedFileDetails()
     {
         // Arrange
-        var projectId = new ProjectIdentifier { ProjectId = "139" };
+        var projectId = new ProjectIdentifier { ProjectId = "3767" };
         var input = new UploadProjectFileRequest
         {
             SourceLocale = "en-US",
@@ -69,7 +69,7 @@ public class ProjectTests : TestBase
     public async Task StartProject_IsSuccess()
     {
         // Arrange
-        var projectId = new ProjectIdentifier { ProjectId = "139" };
+        var projectId = new ProjectIdentifier { ProjectId = "3767" };
 
         // Act
         await _actions.StartProject(projectId);
