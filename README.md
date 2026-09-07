@@ -1,4 +1,4 @@
-# Blackbird.io welocalize OPAL
+# Blackbird.io welocalize Opal
 
 Blackbird is the new automation backbone for the language technology industry. Blackbird provides enterprise-scale automation and orchestration with a simple no-code/low-code platform. Blackbird enables ambitious organizations to identify, vet and automate as many processes as possible. Not just localization workflows, but any business and IT process. This repository represents an application that is deployable on Blackbird and usable inside the workflow editor.
 
@@ -6,13 +6,13 @@ Blackbird is the new automation backbone for the language technology industry. B
 
 <!-- begin docs -->
 
-welocalize OPAL is an AI-powered localization platform used to translate and manage multilingual content at scale. 
+welocalize Opal is an AI-powered localization platform used to translate and manage multilingual content at scale. 
 It combines machine translation, large language models (LLMs) and natural language processing to automatically translate, 
 evaluate and improve text across many languages.
 
 ## Before setting up
 
-Before you can connect, make sure you have a welocalize OPAL authentication token.
+Before you can connect, make sure you have a welocalize Opal authentication token.
 
 ## Connecting
 
