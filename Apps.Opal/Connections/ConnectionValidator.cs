@@ -27,8 +27,11 @@ public class ConnectionValidator(InvocationContext invocationContext) : BaseInvo
             string message;
             if (!isValid)
             {
+                
                 var error = JsonConvert.DeserializeObject<ErrorResponse>(response.Content ?? "");
-                message = error?.Detail ?? response.ErrorMessage ?? response.StatusCode.ToString();
+                message = !string.IsNullOrEmpty(error?.Message)
+                    ? error.Message
+                    : response.ErrorMessage ?? response.StatusCode.ToString();
             }
             else
                 message = "Success";

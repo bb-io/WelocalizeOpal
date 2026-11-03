@@ -1,4 +1,5 @@
-﻿using Apps.Opal.Models.Entities;
+﻿using Apps.Opal.Extensions;
+using Apps.Opal.Models.Entities;
 using Apps.Opal.Models.Identifier;
 using Blackbird.Applications.Sdk.Common;
 using Blackbird.Applications.Sdk.Common.Dynamic;
@@ -25,9 +26,7 @@ public class CompletedJobDataHandler(
 
         return jobs
             .Select(x => new DataSourceItem(x.JobId, $"{x.FileName} (Source: {x.SourceLocale}, target: {x.TargetLocale})"))
-            .Where(x => 
-                context.SearchString == null || 
-                x.DisplayName.Contains(context.SearchString, StringComparison.OrdinalIgnoreCase)) 
+            .Where(x => x.DisplayName.Matches(context.SearchString)) 
             .ToList();
     }
 }
