@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using Apps.Opal.Extensions;
+using RestSharp;
 using Apps.Opal.Models.Entities;
 using Apps.Opal.Models.Identifier;
 using Blackbird.Applications.Sdk.Common;
@@ -22,9 +23,7 @@ public class ProjectFileDataHandler(
         var processedFiles = response.Files.Where(x => x.FileType is "output" or "final");
         return processedFiles
             .Select(x => new DataSourceItem(x.FileId, x.ToString()))
-            .Where(x =>
-                context.SearchString == null ||
-                x.DisplayName.Contains(context.SearchString, StringComparison.OrdinalIgnoreCase))
+            .Where(x => x.DisplayName.Matches(context.SearchString))
             .ToList();
     }
 }
